@@ -4,13 +4,14 @@ from transformers import AutoTokenizer
 from petals import AutoDistributedModelForCausalLM
 import os
 import sys
+from transformers import CodeLlamaTokenizer
 
-os.environ["HUGGINGFACE_API_KEY"] = ""
+#os.environ["HUGGINGFACE_API_KEY"] = ""
 
 if len(sys.argv) > 1:
     model_name = sys.argv[1]
 else:
-    model_name = "meta-llama/Llama-2-70b-chat-hf"
+    model_name = "codellama/CodeLlama-34b-Instruct-hf"
 
 print(f"MODEL: {model_name}")
 
@@ -36,6 +37,7 @@ with model.inference_session(max_length=4096) as sess:
         print("Friendly AI:", end="", flush=True)
 
         while True:
+            # this line
             outputs = model.generate(prefix, max_new_tokens=1, session=sess,
                                      do_sample=True, temperature=0.9, top_p=0.6)
             outputs = tokenizer.decode([fake_token, outputs[0, -1].item()])[1:]
